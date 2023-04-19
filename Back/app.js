@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-const Post = require('./models/post');
+const postsRoutes = require("./routes/posts");
 
 const app = express();
 
@@ -11,7 +11,6 @@ const fs = require("fs");
 
 function connectToMyMongo() {
     //////// read the username and the password from my file.
-    console.log("Myyy Data");
 
     fs.readFile("./../../MyMongoDb.json", "utf8", (err, jsonString) => {
         if (err) {
@@ -25,15 +24,7 @@ function connectToMyMongo() {
 
             const uri = `mongodb+srv://Nir:${userDB.password}@cluster0.tcpdrjy.mongodb.net/Testt?retryWrites=true&w=majority`;
 
-            //            mongoDb connect
-            // mongoose.connect(`mongodb+srv://Nir:${userDB.password}@cluster0.tcpdrjy.mongodb.net/?retryWrites=true&w=majority`).then(() => {
-            //     console.log('Connected to database!');
-            // }).catch(() => {
-            //     console.log("Connection failed!");
-            // });
-
-
-            console.log("uri :", uri);
+            // console.log("uri :", uri);
 
             // Prints "MongoError: bad auth Authentication failed."
 
@@ -48,11 +39,6 @@ function connectToMyMongo() {
 
             // End :  mongoDb connect
 
-
-
-
-            console.log("Success :)");
-
         } catch (err) {
             console.log("Error parsing JSON string:", err);
         }
@@ -61,6 +47,7 @@ function connectToMyMongo() {
     ///////
 }
 
+////// invoke connection to mongoDB
 connectToMyMongo();
 
 
@@ -81,38 +68,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.post("/api/posts", (req, res, next) => {
-    const post = new Post({
-        title: req.body.title,
-        content: req.body.content
-    });
 
-    console.log(post);
 
-    post.save();
-    res.status(201).json({
-        message: 'Post added successfully'
-    });
-
-});
-
-app.get("/api/posts", (req, res, next) => {
-    const posts = [
-        {
-            id: "fadf12421l",
-            title: "First server-side post",
-            content: "This is coming from the server"
-        },
-        {
-            id: "ksajflaj132",
-            title: "Second server-side post",
-            content: "This is coming from the server!"
-        }
-    ];
-    res.status(200).json({
-        message: "Posts fetched successfully!",
-        posts: posts
-    });
-});
+app.use("/api/posts", postsRoutes);
 
 module.exports = app;

@@ -13,6 +13,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   private sub!: Subscription;
 
+  isLoading = false;
 
   constructor(public postsService: PostsService) {
 
@@ -23,15 +24,21 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
 
     this.sub = this.postsService.getPostUpdateListener()
       .subscribe((posts: Post[]) => {
+        this.isLoading = false;
         this.posts = posts;
       });
 
     this.postsService.getPosts();
   }
 
+  onDelete(id: string) {
+    this.postsService.deletePost(id);
+
+  }
 
 
 }
