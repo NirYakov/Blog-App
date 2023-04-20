@@ -1,17 +1,17 @@
 <mat-card>
-    <form [formGroup]="theForm" (ngSubmit)="onAddPost()">
+  <form [formGroup]="theForm" (ngSubmit)="onSavePost()">
 
-        <mat-form-field>
-            <input matInput placeholder="Post Title" formControlName="title">
-            <mat-error *ngIf="theForm.value.title !== '' "> {{ "Please enter post title." }}</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-            <textarea matInput rows="4" type="text" placeholder="Post Content" formControlName="content">
+    <mat-form-field>
+      <input matInput placeholder="Post Title" formControlName="title">
+      <mat-error *ngIf="theForm.value.title !== '' "> {{ "Please enter post title." }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput rows="4" type="text" placeholder="Post Content" formControlName="content">
              </textarea>
-            <mat-error *ngIf=" !theForm.get('content')!.valid &&  theForm.get('content')!.touched">
-                {{ "Please enter post content." }}
-            </mat-error>
-        </mat-form-field>
-        <button type="submit" mat-raised-button color="accent">Save Post</button>
-    </form>
+      <mat-error *ngIf=" !theForm.get('content')!.valid &&  theForm.get('content')!.touched">
+        {{ "Please enter post content." }}
+      </mat-error>
+    </mat-form-field>
+    <button type="submit" mat-raised-button color="accent">Save Post</button>
+  </form>
 </mat-card>
