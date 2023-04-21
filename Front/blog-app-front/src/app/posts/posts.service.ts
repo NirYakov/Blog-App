@@ -53,11 +53,8 @@ export class PostsService {
     // const post = this.posts.find(p => p.id === id) || { id: '-0', content: 'n\a', title: 'n\a' };
 
 
-    //   return this.http.get<{ _id: string, title: string, content: string }>
-    //     (this.basePath + '/posts/' + id);
-
-    return { ...this.posts.find(p => p.id === id) };
-
+    return this.http.get<{ _id: string, title: string, content: string }>
+      (this.basePath + '/posts/' + id);
   }
 
   addPost(title: string, content: string) {

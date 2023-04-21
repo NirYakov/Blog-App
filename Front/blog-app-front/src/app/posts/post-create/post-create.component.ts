@@ -17,6 +17,7 @@ export class PostCreateComponent implements OnInit {
   private mode = 'create';
   private postId: string = "";
   post!: Post;
+  isLoading = false;
 
   constructor(public postsService: PostsService, public route: ActivatedRoute) { }
 
@@ -32,28 +33,27 @@ export class PostCreateComponent implements OnInit {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId') || "";
+        this.isLoading = true;
+        this.postsService.getPost(this.postId).subscribe(thePost => {
 
-        const thePost = this.postsService.getPost(this.postId);
+          this.isLoading = false;
 
-        if (thePost) {
+          if (thePost) {
 
+            this.post =
+            {
+              id: thePost._id || "",
+              title: thePost.title || "",
+              content: thePost.content || "",
+            }
 
-          this.post =
-          {
-            id: thePost.id || "",
-            title: thePost.title || "",
-            content: thePost.content || "",
+            this.theForm.get('title')?.setValue(this.post.title);
+            //  = this.post.title;
+            this.theForm.get('content')?.setValue(this.post.content);
+
+            console.log("this.post", this.post);
           }
-
-          this.theForm.get('title')?.setValue(this.post.title);
-          //  = this.post.title;
-          this.theForm.get('content')?.setValue(this.post.content);
-
-          console.log("this.post", this.post);
-        }
-
-
-
+        });
       } else {
         this.postId = "";
         this.mode = 'create';
@@ -66,6 +66,7 @@ export class PostCreateComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
     if (this.mode === 'create') {
       this.postsService.addPost(this.theForm.value.title, this.theForm.value.content);
 
