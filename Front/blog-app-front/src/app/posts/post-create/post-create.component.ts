@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup, NgForm, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 
 import { PostsService } from "../posts.service";
@@ -25,8 +25,9 @@ export class PostCreateComponent implements OnInit {
 
     this.theForm = new FormGroup(
       {
-        'title': new FormControl(null, Validators.required),
-        'content': new FormControl(null, Validators.required),
+        title: new FormControl(null, { validators: [Validators.required, Validators.minLength(3)] }),
+        content: new FormControl(null, { validators: [Validators.required] }),
+        image: new FormControl(null, { validators: [Validators.required] }),
       });
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -47,9 +48,14 @@ export class PostCreateComponent implements OnInit {
               content: thePost.content || "",
             }
 
-            this.theForm.get('title')?.setValue(this.post.title);
-            //  = this.post.title;
-            this.theForm.get('content')?.setValue(this.post.content);
+            // this.theForm.get('title')?.setValue(this.post.title);
+            // this.theForm.get('content')?.setValue(this.post.content);
+
+            this.theForm.patchValue(
+              {
+                title: this.post.title,
+                content: this.post.content
+              });
 
             console.log("this.post", this.post);
           }
@@ -59,6 +65,19 @@ export class PostCreateComponent implements OnInit {
         this.mode = 'create';
       }
     });
+  }
+
+  onImagePicked(event: Event) {
+    const eEl = (event.target as HTMLInputElement);
+    const file = eEl.files![0];
+
+
+    this.theForm.patchValue({ image: file });
+    this.theForm.get('image')!.updateValueAndValidity();
+
+    console.log("file : ", file);
+    console.log(this.theForm);
+
   }
 
   onSavePost() {
@@ -76,7 +95,7 @@ export class PostCreateComponent implements OnInit {
     }
 
     // console.log(this.theForm);
-    this.theForm.reset(this.theForm);
+    this.theForm.reset();
   }
 
 }
