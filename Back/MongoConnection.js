@@ -14,7 +14,7 @@ module.exports = function connectToMyMongo() {
             console.log("userDB username is:", userDB.username);
             console.log("userDB password is:", userDB.password);
 
-            const uri = `mongodb+srv://Nir:${userDB.password}@cluster0.tcpdrjy.mongodb.net/Testt?retryWrites=true&w=majority`;
+            const uri = `mongodb+srv://Nir:${userDB.password}@cluster0.tcpdrjy.mongodb.net/Testt`;
 
             // console.log("uri :", uri);
 
