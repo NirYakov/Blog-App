@@ -22,30 +22,32 @@ router.post("/signup", (req, res, next) => {
             })
             .catch(err => {
                 res.status(500).json({
-                    error: err
+                    message: "Invalid authentication credentials!"
                 });
             });
     });
 });
-
 
 router.post("/login", (req, res, next) => {
     let fetchedUser;
     User.findOne({ email: req.body.email })
         .then(user => {
             if (!user) {
-                return res.status(401).json({
-                    message: "Auth failed"
+                res.status(401).json({
+                    message: "Invalid authentication credentials! Try Me"
                 });
+                return false;
             }
             fetchedUser = user;
             return bcrypt.compare(req.body.password, user.password);
         })
         .then(result => {
             if (!result) {
-                return res.status(401).json({
-                    message: "Auth failed"
-                });
+                if (!res.statusCode)
+                    res.status(401).json({
+                        message: "Auth failed"
+                    });
+                return res;
             }
             const token = jwt.sign(
                 { email: fetchedUser.email, userId: fetchedUser._id },
@@ -58,11 +60,12 @@ router.post("/login", (req, res, next) => {
                 userId: fetchedUser._id
             });
         })
-        .catch(err => {
-            return res.status(401).json({
-                message: "Auth failed"
-            });
-        });
+    // .catch(err => {
+    //     return res.status(401).json({
+    //         message: "Invalid authentication credentials!"
+    //     });
+    // });
+
 });
 
 module.exports = router;

@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Subject } from "rxjs";
 
 import { AuthData } from "./auth-data.model";
+import { error } from "console";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -28,7 +29,6 @@ export class AuthService {
   }
 
   getUserId() {
-    console.log("Get User Id : ", this.userId);
     return this.userId;
   }
 
@@ -36,8 +36,12 @@ export class AuthService {
     const authData: AuthData = { email: email, password: password };
     this.http
       .post("http://localhost:3000/api/user/signup", authData)
-      .subscribe(response => {
-        console.log(response);
+      .subscribe({
+        complete: () => {
+          this.router.navigate(["/"]);
+        }, error: err => {
+          this.authStatusListener.next(false);
+        }
       });
   }
 
@@ -63,6 +67,8 @@ export class AuthService {
           this.saveAuthData(token, expirationDate, this.userId);
           this.router.navigate(["/"]);
         }
+      }, error => {
+        this.authStatusListener.next(false);
       });
   }
 

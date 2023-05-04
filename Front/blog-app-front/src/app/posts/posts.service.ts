@@ -11,7 +11,6 @@ export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<{ posts: Post[]; postCount: number }>();
 
-
   basePath = `http://localhost:3000/api`;
 
   constructor(private http: HttpClient, private router: Router) { }
