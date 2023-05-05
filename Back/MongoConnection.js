@@ -16,10 +16,6 @@ module.exports = function connectToMyMongo() {
 
             const uri = `mongodb+srv://Nir:${userDB.password}@cluster0.tcpdrjy.mongodb.net/Testt`;
 
-            // console.log("uri :", uri);
-
-            // Prints "MongoError: bad auth Authentication failed."
-
             mongoose.connect(uri, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
@@ -28,13 +24,8 @@ module.exports = function connectToMyMongo() {
                 console.log('Connected to database');
             }).catch(err => { console.log(err.reason); console.log("Connection failed!"); });
 
-
-            // End :  mongoDb connect
-
         } catch (err) {
             console.log("Error parsing JSON string:", err);
         }
     });
-
-    ///////
 }
