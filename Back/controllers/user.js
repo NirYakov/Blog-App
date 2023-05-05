@@ -31,7 +31,7 @@ exports.userLogin = (req, res, next) => {
         .then(user => {
             if (!user) {
                 res.status(401).json({
-                    message: "Invalid authentication credentials! Try Me"
+                    message: "Invalid authentication credentials!"
                 });
                 return false;
             }
@@ -40,7 +40,7 @@ exports.userLogin = (req, res, next) => {
         })
         .then(result => {
             if (!result) {
-                if (!res.statusCode)
+                if (res.statusCode)
                     res.status(401).json({
                         message: "Auth failed"
                     });
@@ -48,7 +48,7 @@ exports.userLogin = (req, res, next) => {
             }
             const token = jwt.sign(
                 { email: fetchedUser.email, userId: fetchedUser._id },
-                process.env.JWT_KEY,
+                "secret_this_should_be_longer", // process.env.JWT_KEY,
                 { expiresIn: "1h" }
             );
             res.status(200).json({
@@ -56,5 +56,5 @@ exports.userLogin = (req, res, next) => {
                 expiresIn: 3600,
                 userId: fetchedUser._id
             });
-        })
+        }).catch(error => console.log(" Error Occured!"));
 }

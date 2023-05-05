@@ -73,7 +73,7 @@ exports.updatePost = (req, res, next) => {
         })
         .catch(error => {
             res.status(500).json({
-                message: "Couldn't udpate post!"
+                message: "Couldn't update post!"
             });
         });
 };

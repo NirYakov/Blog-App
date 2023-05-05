@@ -36,7 +36,7 @@ export class AuthService {
 
   createUser(email: string, password: string) {
     const authData: AuthData = { email: email, password: password };
-    this.http.post(BACKEND_URL + "/signup", authData).subscribe(
+    this.http.post(BACKEND_URL + "signup", authData).subscribe(
       () => {
         this.router.navigate(["/"]);
       },
@@ -48,9 +48,10 @@ export class AuthService {
 
   login(email: string, password: string) {
     const authData: AuthData = { email: email, password: password };
+    console.log(BACKEND_URL + "login");
     this.http
       .post<{ token: string; expiresIn: number; userId: string }>(
-        BACKEND_URL + "/login",
+        BACKEND_URL + "login",
         authData
       )
       .subscribe(
