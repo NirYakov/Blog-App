@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { ActivatedRoute, ParamMap } from "@angular/router";
+import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 
 import { PostsService } from "../posts.service";
 import { Post } from "../../models/post.model";
@@ -28,7 +28,8 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   constructor(
     public postsService: PostsService,
     public route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -66,7 +67,11 @@ export class PostCreateComponent implements OnInit, OnDestroy {
             content: this.post.content,
             image: this.post.imagePath
           });
+        }, error => {
+          this.isLoading = false;
+          this.router.navigate(["/"]);
         });
+
       } else {
         this.mode = "create";
         this.postId = null;
@@ -104,6 +109,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
         this.form.value.image
       );
     }
+    this.isLoading = false;
     this.form.reset();
   }
 
