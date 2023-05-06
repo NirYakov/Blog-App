@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 });
 
 
-
+app.get("/api/health", (req, res, next) => { res.status(201).json({ health: "Online ! :)" }); })
 app.use("/api/posts", postsRoutes);
 app.use("/api/user", userRoutes);
 
