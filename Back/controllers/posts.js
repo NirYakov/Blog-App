@@ -8,7 +8,8 @@ exports.createPost = (req, res, next) => {
         title: req.body.title,
         content: req.body.content,
         imagePath: url + "/images/" + req.file.filename,
-        creator: req.userData.userId
+        creator: req.userData.userId,
+        likes: "0"
     });
 
     post.save().then(createdPost => {
@@ -36,7 +37,7 @@ exports.getPosts = (req, res, next) => {
     postQuery
         .then(documents => {
             fetchedPosts = documents;
-            return Post.count();
+            return Post.countDocuments();
         })
         .then(count => {
             res.status(200).json({
@@ -92,6 +93,7 @@ exports.deletePost = (req, res, next) => {
     });;
 }
 
+// PostLike
 
 exports.getPostById = (req, res, next) => {
     Post.findById(req.params.id).then(post => {
@@ -103,4 +105,14 @@ exports.getPostById = (req, res, next) => {
     }).catch(error => {
         res.status(500).json({ message: "Fetcing post failed!" });
     });
+}
+
+
+exports.postLike = (req, res, next) => {
+
+    const isLike = req.body.isLike;
+
+    console.log(">>>>" + isLike);
+
+    res.status(200).json({ like: "LIKE :)", isLike });
 } 

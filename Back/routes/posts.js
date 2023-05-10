@@ -1,6 +1,8 @@
 const express = require("express");
 const checkAuth = require("../middleware/check-auth");
 
+const checkAllowed = require("../middleware/check-allowed");
+
 const extractFile = require("../middleware/file");
 const PostController = require("../controllers/posts");
 
@@ -25,5 +27,7 @@ router.get("", PostController.getPosts);
 router.get("/:id", PostController.getPostById);
 
 router.delete("/:id", checkAuth, PostController.deletePost);
+
+router.post("/like/:id", checkAllowed, PostController.postLike);
 
 module.exports = router;

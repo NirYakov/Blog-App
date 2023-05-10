@@ -66,6 +66,7 @@ export class PostsService {
     postData.append("title", title);
     postData.append("content", content);
     postData.append("image", image, title);
+    postData.append("likes", "0");
     this.http
       .post<{ message: string; post: Post }>(
         BACKEND_URL,
@@ -98,6 +99,13 @@ export class PostsService {
       .subscribe(response => {
         this.router.navigate(["/"]);
       });
+  }
+
+  likePost(postId: string, isLike: boolean) {
+    return this.http.post(BACKEND_URL + "like/" + postId, { isLike }).subscribe(resultsData => {
+      console.log("Yeah Back From Server!");
+      console.log(resultsData);
+    });
   }
 
   deletePost(postId: string) {
