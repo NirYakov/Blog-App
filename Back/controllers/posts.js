@@ -9,7 +9,7 @@ exports.createPost = (req, res, next) => {
         content: req.body.content,
         imagePath: url + "/images/" + req.file.filename,
         creator: req.userData.userId,
-        likes: "0"
+        likes: 0
     });
 
     post.save().then(createdPost => {
@@ -111,8 +111,35 @@ exports.getPostById = (req, res, next) => {
 exports.postLike = (req, res, next) => {
 
     const isLike = req.body.isLike;
+    const postId = req.params.id;
 
-    console.log(">>>>" + isLike);
+    console.log(`>>>>  ${isLike}   ${req.userData.userId}`);
 
-    res.status(200).json({ like: "LIKE :)", isLike });
+    const randZeroToN = (n) => { return Math.floor(Math.random() * (n + 1)); };
+
+    const num = randZeroToN(1_000);
+
+    // userLoggedIn
+
+    // {$inc : {'post.likes' : 1}
+    // {$inc : {'post.likes' : 1}}
+    // Post.updateOne({ _id: postId }, { $inc: { likes: 1 } })
+    Post.updateOne({ _id: postId }, { likes: num })
+        .then(result => {
+            if (result.n > 0) {
+                res.status(200).json({ message: "Update successful!", likes: num });
+            } else {
+                res.status(401).json({ message: "Not authorized!" });
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Couldn't update post!"
+            });
+        });
+
+    // req.userData.userId
+
+
+    // res.status(200).json({ like: "LIKE :)", isLike });
 } 

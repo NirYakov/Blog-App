@@ -1,7 +1,8 @@
 export interface Post {
+  id: string;
   title: string;
   content: string;
-  id: string;
   imagePath: string;
   creator: string;
+  likes: number;
 }

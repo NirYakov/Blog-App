@@ -23,3 +23,7 @@ mat-spinner {
 mat-paginator {
   margin-top: 1rem;
 }
+
+.spacer {
+  flex: 1 1 auto;
+}

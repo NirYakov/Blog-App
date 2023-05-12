@@ -29,11 +29,20 @@ export class PostListComponent implements OnInit, OnDestroy {
   constructor(public postsService: PostsService, private authService: AuthService) { }
 
 
-  onClickedLike(postId: string) {
+  onClickedLike(postId: string, post: Post) {
+
+    console.log("userid that logged in is : ", this.authService.getUserId());
 
     this.isLiked = !this.isLiked;
 
-    this.postsService.likePost(postId, this.isLiked);
+    // this.postsService.likePost(postId, this.isLiked);
+
+    this.postsService.likePost(postId, this.isLiked)
+      .subscribe((resultsData: { message: string, likes: number }) => {
+        console.log("Yeah Back From Server!");
+        console.log(resultsData);
+        post.likes = resultsData.likes;
+      });
   }
 
 
