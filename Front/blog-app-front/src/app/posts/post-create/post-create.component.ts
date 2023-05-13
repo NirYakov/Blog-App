@@ -61,7 +61,8 @@ export class PostCreateComponent implements OnInit, OnDestroy {
             content: postData.content,
             imagePath: postData.imagePath,
             creator: postData.creator,
-            likes: postData.likes
+            likes: postData.likes,
+            isLiked: false,
           };
           this.form.setValue({
             title: this.post.title,

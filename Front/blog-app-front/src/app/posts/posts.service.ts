@@ -32,7 +32,7 @@ export class PostsService {
                 id: post._id,
                 imagePath: post.imagePath,
                 creator: post.creator,
-                likes: post.likes || 0
+                likes: post.likes || 0 // its need to be one pipe ? or two ? i will check it
               };
             }),
             maxPosts: postData.maxPosts
@@ -95,7 +95,8 @@ export class PostsService {
         content: content,
         imagePath: image,
         creator: null,
-        likes: 0
+        likes: 0,
+        isLiked: false,
       };
     }
     this.http
@@ -105,21 +106,12 @@ export class PostsService {
       });
   }
 
-  likePost(postId: string, isLike: boolean) {
 
-    return this.http.post(BACKEND_URL + "like/" + postId,
-      { isLike });
-
-    // return this.http.post(BACKEND_URL + "like/" + postId,
-    //   {
-    //     isLike,
-    //   }).subscribe(resultsData => {
-    //     console.log("Yeah Back From Server!");
-    //     console.log(resultsData);
-    //   });
-  }
 
   deletePost(postId: string) {
     return this.http.delete(BACKEND_URL + postId);
   }
+
+
+
 }

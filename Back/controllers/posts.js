@@ -1,5 +1,6 @@
 
 const Post = require("../models/post");
+const Like = require("../models/like");
 
 
 exports.createPost = (req, res, next) => {
@@ -119,6 +120,11 @@ exports.postLike = (req, res, next) => {
 
     const num = randZeroToN(1_000);
 
+    const like = new Like({
+        userLiked: req.userData.userId,
+        postId: postId,
+    });
+
     // userLoggedIn
 
     // {$inc : {'post.likes' : 1}
@@ -127,14 +133,27 @@ exports.postLike = (req, res, next) => {
     Post.updateOne({ _id: postId }, { likes: num })
         .then(result => {
             if (result.n > 0) {
-                res.status(200).json({ message: "Update successful!", likes: num });
+                // res.status(200).json({ message: "Update successful!", likes: num });
+
+                like.save().then(createdLiked => {
+                    res.status(201).json({
+                        message: "Like added successfully",
+                        createdLiked,
+                        likes: num,
+                        isLike
+
+                    });
+                }).catch(error => {
+                    res.status(500).json({ message: "Creating a post failed!" });
+                });
+
             } else {
                 res.status(401).json({ message: "Not authorized!" });
             }
         })
         .catch(error => {
             res.status(500).json({
-                message: "Couldn't update post!"
+                message: "Couldn't like the post!"
             });
         });
 

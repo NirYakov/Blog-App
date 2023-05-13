@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Post } from '../../models/post.model';
 import { PostsService } from '../posts.service';
-import { Subscription } from 'rxjs';
+import { Subscription, map } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { AuthService } from 'src/app/auth/auth.service';
+import { LikesService } from '../likes.service';
 
 
 @Component({
@@ -26,7 +27,11 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   isLiked = false;
 
-  constructor(public postsService: PostsService, private authService: AuthService) { }
+  constructor(
+    private postsService: PostsService,
+    private authService: AuthService,
+    private likesService: LikesService
+  ) { }
 
 
   onClickedLike(postId: string, post: Post) {
@@ -37,11 +42,35 @@ export class PostListComponent implements OnInit, OnDestroy {
 
     // this.postsService.likePost(postId, this.isLiked);
 
-    this.postsService.likePost(postId, this.isLiked)
+    this.likesService.likePost(postId, this.isLiked)
       .subscribe((resultsData: { message: string, likes: number }) => {
         console.log("Yeah Back From Server!");
         console.log(resultsData);
         post.likes = resultsData.likes;
+        post.isLiked = false;
+      });
+
+
+  }
+
+  GetAllUserLikes() {
+    this.likesService.getUserLikes().pipe(map(result => { return { message: result.message, result: result.result.map(ary => ary.postId) } }))
+      .subscribe({
+        // next: (result: { message: string, result: [] }) => {
+        next: (result: { message: string, result: [] }) => {
+          console.log("im back here without data? ");
+          console.log(result.result);
+          console.log(result.message);
+
+
+          result.result.forEach(val => {
+            const post = this.posts.find(post => post.id === val);
+            if (post) {
+              post.isLiked = true;
+            }
+          })
+        },
+        error: error => console.log(error)
       });
   }
 

@@ -40,6 +40,6 @@ app.get("/api/health", (req, res, next) => { res.status(201).json({ health: "Onl
 app.use("/api/posts", postsRoutes);
 app.use("/api/user", userRoutes);
 
-app.use("/api/like", likesRoutes);
+app.use("/api/likes", likesRoutes);
 
 module.exports = app;
