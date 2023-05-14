@@ -28,6 +28,4 @@ router.get("/:id", PostController.getPostById);
 
 router.delete("/:id", checkAuth, PostController.deletePost);
 
-router.post("/like/:id", checkAllowed, checkAuth, PostController.postLike);
-
 module.exports = router;

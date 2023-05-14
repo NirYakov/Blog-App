@@ -34,49 +34,35 @@ export class PostListComponent implements OnInit, OnDestroy {
   ) { }
 
 
-  onClickedLike(postId: string, post: Post) {
+  onClickedLike(post: Post) {
 
     console.log("userid that logged in is : ", this.authService.getUserId());
 
-    this.isLiked = !this.isLiked;
-
-    // this.postsService.likePost(postId, this.isLiked);
-
-    this.likesService.likePost(postId, this.isLiked)
-      .subscribe((resultsData: { message: string, likes: number }) => {
+    this.likesService.likePost(post.id, post.isLiked)
+      .subscribe((resultsData: { message: string, likes: number, isLiked: boolean }) => {
         console.log("Yeah Back From Server!");
         console.log(resultsData);
         post.likes = resultsData.likes;
-        post.isLiked = false;
+        post.isLiked = resultsData.isLiked;
       });
 
 
   }
 
-  GetAllUserLikes() {
-    this.likesService.getUserLikes().pipe(map(result => { return { message: result.message, result: result.result.map(ary => ary.postId) } }))
-      .subscribe({
-        // next: (result: { message: string, result: [] }) => {
-        next: (result: { message: string, result: [] }) => {
-          console.log("im back here without data? ");
-          console.log(result.result);
-          console.log(result.message);
+  updateLikesButtons() {
 
-
-          result.result.forEach(val => {
-            const post = this.posts.find(post => post.id === val);
-            if (post) {
-              post.isLiked = true;
-            }
-          })
-        },
-        error: error => console.log(error)
-      });
+    this.likesService.userLikes.forEach(val => {
+      const post = this.posts.find(post => post.id === val);
+      if (post) {
+        post.isLiked = true;
+      }
+    });
   }
 
 
   ngOnInit() {
     this.isLoading = true;
+    this.likesService.getUserLikes();
     this.postsService.getPosts(this.postsPerPage, this.currentPage);
     this.userId = this.authService.getUserId();
     this.postsSub = this.postsService
@@ -85,6 +71,7 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.totalPosts = postData.postCount;
         this.posts = postData.posts;
+        this.updateLikesButtons();
       });
 
     this.userIsAuthenticated = this.authService.getIsAuth();

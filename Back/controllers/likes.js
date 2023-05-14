@@ -35,32 +35,66 @@ exports.GetAllUserLikes = (req, res, next) => {
 
 exports.likePost = (req, res, next) => {
 
+    const isLike = req.body.isLike;
+    const postId = req.params.id;
+
+    console.log(`>>>>  ${isLike}   ${req.userData.userId}`);
+
+    const randZeroToN = (n) => { return Math.floor(Math.random() * (n + 1)); };
+
+    const num = randZeroToN(1_000);
+
+    const like = new Like({
+        userLiked: req.userData.userId,
+        postId: postId,
+    });
+
+    // userLoggedIn
+
+    // {$inc : {'post.likes' : 1}
+    // {$inc : {'post.likes' : 1}}
+    // Post.updateOne({ _id: postId }, { $inc: { likes: 1 } })
+    Post.updateOne({ _id: postId }, { likes: num })
+        .then(result => {
+            if (result.n > 0) {
+                // res.status(200).json({ message: "Update successful!", likes: num });
+
+                like.save().then(createdLiked => {
+                    res.status(201).json({
+                        message: "Like added successfully",
+                        createdLiked,
+                        likes: num,
+                        isLike
+
+                    });
+                }).catch(error => {
+                    res.status(500).json({ message: "Creating a post failed!" });
+                });
+
+            } else {
+                res.status(401).json({ message: "Not authorized!" });
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "Couldn't like the post!"
+            });
+        });
+
+    // req.userData.userId
 
 
+    // res.status(200).json({ like: "LIKE :)", isLike });
+}
 
-    //  console.log(req);
-
-    console.log("myTestMiddleware ........")
-
-
-
-    // bcrypt.hash(req.body.password, 10).then(hash => {
-    //     const user = new User({
-    //         email: req.body.email,
-    //         password: hash
-    //     });
-    //     user
-    //         .save()
-    //         .then(result => {
-    //             res.status(201).json({
-    //                 message: "User created!",
-    //                 result: result
-    //             });
-    //         })
-    //         .catch(err => {
-    //             res.status(500).json({
-    //                 message: "Invalid authentication credentials!"
-    //             });
-    //         });
-    // });
+exports.getPostById = (req, res, next) => {
+    Post.findById(req.params.id).then(post => {
+        if (post) {
+            res.status(200).json(post);
+        } else {
+            res.status(404).json({ message: "Post not found!" });
+        }
+    }).catch(error => {
+        res.status(500).json({ message: "Fetcing post failed!" });
+    });
 }

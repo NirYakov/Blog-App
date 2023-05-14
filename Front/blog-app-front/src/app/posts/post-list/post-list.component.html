@@ -1,5 +1,3 @@
-<button (click)="GetAllUserLikes()"> Get Likes</button>
-
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <mat-accordion multi="true" *ngIf="posts.length > 0 && !isLoading">
   <mat-expansion-panel *ngFor="let post of posts">
@@ -17,12 +15,11 @@
     <p>{{ post.content }}</p>
     <mat-action-row>
       <div *ngIf="userIsAuthenticated">
-        <button *ngIf="post.isLiked" style="align-self: center; background-color: aqua;"
-          (click)="onClickedLike(post.id,post)">
+        <button *ngIf="post.isLiked" style="align-self: center; background-color: aqua;" (click)="onClickedLike(post)">
           ❤
         </button>
         <button *ngIf="!post.isLiked" style="align-self: center; background-color: lightgoldenrodyellow;"
-          (click)="onClickedLike(post.id,post)">
+          (click)="onClickedLike(post)">
           💖
         </button>
       </div>
