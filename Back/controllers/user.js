@@ -2,7 +2,17 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-exports.createUser = (req, res, next) => {
+exports.createUser = async (req, res, next) => {
+    const userLooked = await User.findOne({ email: req.body.email });
+
+    if (userLooked) {
+        console.log("User in the database");
+
+        return res.status(500).json({
+            message: "Invalid authentication credentials! User in the database."
+        });
+    }
+
     bcrypt.hash(req.body.password, 10).then(hash => {
         const user = new User({
             email: req.body.email,
@@ -40,7 +50,7 @@ exports.userLogin = (req, res, next) => {
         })
         .then(result => {
             if (!result) {
-                if (res.statusCode)
+                if (!res.statusCode)
                     res.status(401).json({
                         message: "Auth failed"
                     });

@@ -16,7 +16,7 @@ const connectByReadJsonFile = () => {
             console.log("userDB username is:", userDB.username);
             console.log("userDB password is:", userDB.password);
 
-            const uri = `mongodb+srv://Nir:${userDB.password}@cluster0.tcpdrjy.mongodb.net/Testt`;
+            const uri = `mongodb+srv://Nir:${userDB.password}@cluster0.gaq5jbs.mongodb.net/Testt`;
 
             mongoose.connect(uri, {
                 useNewUrlParser: true,
